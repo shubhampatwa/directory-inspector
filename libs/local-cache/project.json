@@ -1,0 +1,23 @@
+{
+  "root": "libs/local-cache",
+  "sourceRoot": "libs/local-cache/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/local-cache/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/local-cache"],
+      "options": {
+        "jestConfig": "libs/local-cache/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
