@@ -6,6 +6,7 @@
     "file-explorer": "libs/file-explorer",
     "local-cache": "libs/local-cache",
     "server": "apps/server",
-    "typedefs": "libs/typedefs"
+    "typedefs": "libs/typedefs",
+    "validations": "libs/validations"
   }
 }
