@@ -3,4 +3,9 @@
 
 export const environment = {
   production: false,
+
+  // configuration for apollo client
+  apolloConfig: {
+    graphEndpoint: process.env['NX_GRAPH_ENDPOINT'] || 'http://localhost:3000/graphql'
+  },
 };

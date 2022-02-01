@@ -1,13 +1,12 @@
-import { Route, Link } from 'react-router-dom';
+import { ApolloProvider } from "@apollo/client";
 import { FileExplorer } from '@directory-inspector/file-explorer'
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
-
+import apolloClient from "../config/apolloClient";
 
 export function App() {
   return (
-    <FileExplorer />
+    <ApolloProvider client={apolloClient}>
+      <FileExplorer />
+    </ApolloProvider>
   );
 }
 
