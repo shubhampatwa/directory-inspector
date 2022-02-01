@@ -1,1 +1,1 @@
-export * from './lib/validations';
+export * from './lib/number';

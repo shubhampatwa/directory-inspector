@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Formik } from 'formik';
+import { Formik, FormikErrors } from 'formik';
+import { isNonNegativeNumber, isNonPositiveNumber } from '@directory-inspector/validations';
 import SearchFormLayout from './components/SearchFormLayout';
 
 export interface SearchFormValues {
@@ -23,10 +24,18 @@ export const SearchForm: React.FunctionComponent<SearchFormProps> = (props) => {
     <Formik
       enableReinitialize
       initialValues={props.initialValues}
-      validate={(values) => {
-        const errors: Partial<SearchFormValues> = {};
+      validate={async (values) => {
+        const errors: FormikErrors<SearchFormValues> = {};
         if (!values.path.length) {
-          errors.path = 'Path is required';
+          errors.path = 'Path must be a valid string';
+        }
+
+        if (isNonNegativeNumber(values.offset)) {
+          errors.offset = 'Offset must be a valid number';
+        }
+
+        if (isNonPositiveNumber(values.limit)) {
+          errors.limit = 'Limit must be a valid positive integer';
         }
 
         return errors;
