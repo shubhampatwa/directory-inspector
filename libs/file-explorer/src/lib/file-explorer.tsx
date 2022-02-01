@@ -15,10 +15,12 @@ interface FileNode {
 }
 
 export interface FileExplorerProps {
-  nodes?: FileNode[]
+  defaultExpanded?: string[];
+  nodes?: FileNode[];
 }
 
 const defaultProps: FileExplorerProps = {
+  defaultExpanded: ['root'],
   nodes: [
     {
       "path": "root",
@@ -78,7 +80,7 @@ export function FileExplorer(props: FileExplorerProps = defaultProps) {
       defaultCollapseIcon={<FolderOpenIcon />}
       defaultExpandIcon={<FolderIcon />}
       defaultEndIcon={<FileIcon />}
-      defaultExpanded={['root']}
+      defaultExpanded={props.defaultExpanded}
     >
       {(props.nodes || []).map(renderNode)}
     </TreeView>
