@@ -1,0 +1,17 @@
+overwrite: true
+schema: './apps/server/src/app/graphql/fileExplorer/types.ts'
+documents: null
+require:
+  - ts-node/register
+  - tsconfig-paths/register
+generates:
+  ./libs/typedefs/src/index.ts:
+    config:
+      typesPrefix: GQL_
+      maybeValue: T | null | undefined
+    plugins:
+      - add:
+          content:
+            - /* eslint-disable */
+      - 'typescript'
+      - 'typescript-resolvers'

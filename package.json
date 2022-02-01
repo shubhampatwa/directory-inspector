@@ -6,6 +6,7 @@
     "nx": "nx",
     "start": "nx serve",
     "build": "nx build",
+    "generate-typedefs": "graphql-codegen --config ./libs/typedefs/codegen.yml",
     "test": "nx test"
   },
   "private": true,
@@ -23,6 +24,7 @@
     "core-js": "^3.6.5",
     "express": "4.17.1",
     "graphql": "^16.3.0",
+    "graphql-codegen": "^0.4.0",
     "node-cache": "^5.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -31,6 +33,10 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
+    "@graphql-codegen/add": "^3.1.1",
+    "@graphql-codegen/cli": "^2.4.0",
+    "@graphql-codegen/typescript": "^2.4.2",
+    "@graphql-codegen/typescript-resolvers": "^2.4.3",
     "@nrwl/cli": "13.5.3",
     "@nrwl/cypress": "13.5.3",
     "@nrwl/eslint-plugin-nx": "13.5.3",
