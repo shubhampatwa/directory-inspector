@@ -1,0 +1,23 @@
+{
+  "root": "libs/file-explorer",
+  "sourceRoot": "libs/file-explorer/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/file-explorer/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/file-explorer"],
+      "options": {
+        "jestConfig": "libs/file-explorer/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
+}
