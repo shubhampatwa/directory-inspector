@@ -27,7 +27,7 @@ export const initApolloGraphqlServer = async (app: Express, httpServer: Server):
 
   apolloServer.applyMiddleware({
     app,
-    cors: false // we can handle cors on main express app in src/app/main.ts
+    cors: false, // we can handle cors on main express app in src/app/main.ts
   });
 
   ['SIGINT', 'SIGTERM'].forEach((signal) => {

@@ -18,6 +18,6 @@ const type = gql`
     size: Int!
     isDirectory: Boolean!
   }
-`
+`;
 
 export default type;
