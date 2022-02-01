@@ -1,11 +1,11 @@
 import { ApolloProvider } from "@apollo/client";
-import { FileExplorer } from '@directory-inspector/file-explorer'
 import apolloClient from "../config/apolloClient";
+import Landing from "./pages/Landing";
 
 export function App() {
   return (
     <ApolloProvider client={apolloClient}>
-      <FileExplorer />
+      <Landing />
     </ApolloProvider>
   );
 }
