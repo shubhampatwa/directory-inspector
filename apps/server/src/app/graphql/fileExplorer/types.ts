@@ -2,24 +2,17 @@ import { gql } from "apollo-server-core";
 
 const type = gql`
   extend type Query {
-    files(offset: Int, limit: Int = 10): FilesPaginated
+    files(path: String!, offset: Int = 1, limit: Int = 10): FilesPaginated
   }
 
   type FilesPaginated {
-    entries: [FileNodes]!
+    entries: [Files]!
     offset: Int!
     limit: Int!
     totalCount: Int!
   }
 
-  type FileNodes {
-    path: String!
-    size: Int!
-    isDirectory: Boolean!
-    nodes: FileNode
-  }
-
-  type FileNode {
+  type Files {
     path: String!
     size: Int!
     isDirectory: Boolean!
