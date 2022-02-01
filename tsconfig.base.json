@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@directory-inspector/file-explorer": ["libs/file-explorer/src/index.ts"],
-      "@directory-inspector/local-cache": ["libs/local-cache/src/index.ts"]
+      "@directory-inspector/local-cache": ["libs/local-cache/src/index.ts"],
+      "@directory-inspector/typedefs": ["libs/typedefs/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
