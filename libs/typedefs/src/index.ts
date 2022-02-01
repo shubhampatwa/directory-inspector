@@ -17,6 +17,7 @@ export type Scalars = {
 
 export type GQL_Files = {
   __typename?: 'Files';
+  id: Scalars['String'];
   isDirectory: Scalars['Boolean'];
   path: Scalars['String'];
   size: Scalars['Int'];
@@ -130,6 +131,7 @@ export type GQL_ResolversParentTypes = {
 };
 
 export type GQL_FilesResolvers<ContextType = any, ParentType extends GQL_ResolversParentTypes['Files'] = GQL_ResolversParentTypes['Files']> = {
+  id?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
   isDirectory?: Resolver<GQL_ResolversTypes['Boolean'], ParentType, ContextType>;
   path?: Resolver<GQL_ResolversTypes['String'], ParentType, ContextType>;
   size?: Resolver<GQL_ResolversTypes['Int'], ParentType, ContextType>;

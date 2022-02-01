@@ -13,6 +13,7 @@ const type = gql`
   }
 
   type Files {
+    id: String!
     path: String!
     size: Int!
     isDirectory: Boolean!
