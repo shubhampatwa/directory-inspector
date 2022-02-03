@@ -1,80 +1,103 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { sep } from 'path-browserify'
+import isEmpty from 'lodash/isEmpty';
+import uniqBy from 'lodash/uniqBy';
 import TreeView from '@mui/lab/TreeView';
 import FolderIcon from '@mui/icons-material/Folder';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import FileIcon from '@mui/icons-material/FileCopyOutlined';
 import Node from './components/Node'
-import { FileNode } from './types'
+import { FileExplorerProps, FileNode } from './types'
+import mapNodesToPath from './utils/mapNodesToPath';
 
-export interface FileExplorerProps {
-  defaultExpanded?: string[];
-  nodes?: FileNode[];
-}
 
-const defaultProps: FileExplorerProps = {
-  defaultExpanded: ['root'],
-  nodes: [
-    {
-      "path": "root",
-      "size": 0,
-      "nodes": [
-        {
-            "path": "root/file1",
-            "size": 24
-        },
-        {
-            "path": "root/file2",
-            "size": 2114
-        },
-        {
-            "path": "root/folder1",
-            "size": 0,
-            "nodes": [
-              {
-                  "path": "root/folder1/file1",
-                  "size": 240
-              },
-              {
-                  "path": "root/folder1/file2",
-                  "size": 2400
-              },
-              {
-                  "path": "root/folder1/folder1",
-                  "size": 24
-              },
-              {
-                  "path": "root/folder1/file4",
-                  "size": 24
-              }
-            ]
-        },
-        {
-            "path": "root/file4",
-            "size": 24
-        }
-      ]
+const prepareNodesToDisplay = (nodes: FileNode[]): FileNode[] => (
+  nodes.map((node: FileNode) => {
+    const updatedNode = { ...node }
+    if (node.isDirectory) {
+      if (!node.nodes?.length) {
+
+        updatedNode.nodes = [{
+          path: 'loading files...',
+          fileName: 'loading files...',
+          size: 0,
+          isDirectory: false,
+          parsedPath: [],
+       }]
+      }
     }
-  ]
-}
 
+    return updatedNode;
+  })
+);
 
-export function FileExplorer(props: FileExplorerProps = defaultProps) {
-  console.log(props)
+export function FileExplorer(props: FileExplorerProps) {
+  const [state, setState] = useState<FileNode[]>([])
+
+  useEffect(() => {
+    if (!props.nodes?.length) {
+      return;
+    }
+
+    const parsedPath = props.currentPath.split('\\');
+    console.log({parsedPath, sep})
+
+    const newNodes = prepareNodesToDisplay(props.nodes || []);
+
+    const found = state.find(({ path }) => {
+      const [basePath] = parsedPath;
+      console.log({basePath})
+      console.log({path})
+      return path === basePath || path === props.currentPath
+    });
+    if (found) {
+      // const newState = state.map(item => {
+        //   if (item.path !== props.currentPath) {
+          //     return item;
+          //   };
+
+          //   const existingNodes = item?.nodes || [];
+          //   item.nodes = uniqBy(
+            //     [...existingNodes, ...newNodes],
+            //     'path'
+            //   ) as FileNode[];
+
+            //   return item;
+            // })
+
+      const updatedState = mapNodesToPath(state, newNodes, props.currentPath.split(sep))
+      console.log(updatedState)
+      setState(updatedState);
+    } else {
+      console.log('adding new')
+      const newState = [...state, {
+        path: props.currentPath,
+        fileName: props.currentPath,
+        size: 0,
+        isDirectory: true,
+        nodes: newNodes,
+        parsedPath
+      }];
+
+      setState(newState);
+    }
+  }, [props.nodes, props.currentPath]);
+
   return (
-    <div>
-      <TreeView
+    <TreeView
       aria-label="rich object"
       defaultCollapseIcon={<FolderOpenIcon />}
       defaultExpandIcon={<FolderIcon />}
       defaultEndIcon={<FileIcon />}
       defaultExpanded={props.defaultExpanded}
     >
-      {(props.nodes || []).map(node => <Node node={node} />)}
+      {(state).map(node => <Node key={node.path} node={node} onSelectNode={props.onSelectNode} />)}
     </TreeView>
-    </div>
   );
 }
 
-FileExplorer.defaultProps = defaultProps
+FileExplorer.defaultProps = {
+  defaultExpanded: ['root']
+}
 
 export default FileExplorer;

@@ -1,0 +1,13 @@
+query GetFiles($path: String!, $offset: Int, $limit: Int) {
+  files(path: $path, offset: $offset, limit: $limit) {
+    entries {
+      id
+      path
+      parsedPath
+      fileName
+      size
+      isDirectory
+    }
+    totalCount
+  }
+}

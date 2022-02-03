@@ -1,4 +1,4 @@
-import { resolve } from 'path';
+import { resolve, sep } from 'path';
 import { GQL_Files } from '@directory-inspector/typedefs';
 import { lstat, readDir } from '../../utils/fsPromisified';
 
@@ -13,6 +13,8 @@ class FileExplorerService {
       return {
         id: path,
         path,
+        fileName: file,
+        parsedPath: path.split(sep).filter(Boolean),
         size: stats.size,
         isDirectory: stats.isDirectory(),
       };

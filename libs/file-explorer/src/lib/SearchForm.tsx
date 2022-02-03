@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Formik, FormikErrors } from 'formik';
+import { Formik, FormikErrors, FormikHelpers } from 'formik';
 import { isNonNegativeNumber, isNonPositiveNumber } from '@directory-inspector/validations';
 import SearchFormLayout from './components/SearchFormLayout';
 
@@ -16,7 +16,11 @@ export const defaultSearchFormValues = {
 }
 
 export interface SearchFormProps {
-  initialValues: SearchFormValues
+  initialValues: SearchFormValues,
+  onSubmit: (
+    values: SearchFormValues,
+    formikHelpers: FormikHelpers<SearchFormValues>
+  ) => void | Promise<any>;
 }
 
 export const SearchForm: React.FunctionComponent<SearchFormProps> = (props) => {
@@ -24,7 +28,7 @@ export const SearchForm: React.FunctionComponent<SearchFormProps> = (props) => {
     <Formik
       enableReinitialize
       initialValues={props.initialValues}
-      validate={async (values) => {
+      validate={async (values: SearchFormValues) => {
         const errors: FormikErrors<SearchFormValues> = {};
         if (!values.path.length) {
           errors.path = 'Path must be a valid string';
@@ -40,12 +44,7 @@ export const SearchForm: React.FunctionComponent<SearchFormProps> = (props) => {
 
         return errors;
       }}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          setSubmitting(false);
-          alert(JSON.stringify(values, null, 2));
-        }, 500);
-      }}
+      onSubmit={props.onSubmit}
     >
       {({ submitForm, isSubmitting, setValues }) => (
         <SearchFormLayout

@@ -15,6 +15,8 @@ const type = gql`
   type Files {
     id: String!
     path: String!
+    fileName: String!
+    parsedPath: [String]!
     size: Int!
     isDirectory: Boolean!
   }
