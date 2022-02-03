@@ -1,41 +1,53 @@
+import uniqBy from "lodash/uniqBy";
+import { sep } from "path-browserify";
 import { FileNode } from "../types";
+
+const mergeNodes = (currentNode: FileNode, newNodes: FileNode[]): FileNode => {
+  return {
+    ...currentNode,
+    nodes: uniqBy([
+      ...(currentNode.nodes || []).filter(({ fileName }) => fileName !== 'PLACEHOLDER'),
+      ...newNodes
+    ], 'path'),
+  };
+};
 
 const mapNode = (
   node: FileNode,
   newNodes: FileNode[],
   parsedPath: string[]
 ): FileNode => {
-  const [path] = parsedPath.slice(0, 1);
+  const [currentDir] = parsedPath.slice(0, 1);
   const restPath = parsedPath.slice(1);
 
   return {
     ...node,
     nodes: (node.nodes || []).map(childNode => {
-      if (childNode.fileName === path || childNode.path === path) {
-        return {
-          ...childNode,
-          nodes: newNodes
-        };
+      if (!childNode.isDirectory) {
+        return childNode;
       }
 
-      return mapNode(childNode, newNodes, restPath);
+      if (restPath.length) {
+        return mapNode(childNode, newNodes, restPath);
+      }
+
+      if (childNode.fileName === currentDir) {
+        return mergeNodes(childNode, newNodes)
+      }
+
+      return childNode;
     }),
-  }
+  };
 };
 
 export const mapNodesToPath = (
-  nodes: FileNode[],
+  node: FileNode,
+  root: string,
   newNodes: FileNode[],
-  parsedPath: string[]
-): FileNode[] => {
-  const [path] = parsedPath;
-
-  return nodes.map((node: FileNode) => {
-    if (node.fileName === path) {
-      return mapNode(node, newNodes, parsedPath)
-    }
-    return node
-  });
+  currentPath: string
+): FileNode => {
+  const parsedPath = currentPath.replace(root, '').split(sep).slice(1)
+  return mapNode(node, newNodes, parsedPath);
 };
 
 export default mapNodesToPath;

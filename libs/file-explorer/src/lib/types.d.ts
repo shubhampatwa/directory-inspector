@@ -5,23 +5,23 @@ export interface FileNode {
   parsedPath: string[];
   size: number;
   nodes?: FileNode[];
-  isDirectory: boolean
+  isDirectory: boolean;
 }
 
 export interface NodeLabelProps {
   node: FileNode;
-  parent?: FileNode
+  parent?: FileNode;
 }
 
 export interface NodeProps extends NodeLabelProps {
-  onSelectNode: SelectNodeCB
+  onSelectNode: SelectNodeCB;
 };
 
 export interface FileExplorerProps {
   defaultExpanded?: string[];
   currentPath: string;
-  nodes?: FileNode[];
-  onSelectNode: SelectNodeCB
+  node?: FileNode;
+  onSelectNode: SelectNodeCB;
 }
 
-type SelectNodeCB = (node: FileNode, parent?: FileNode) => void
+export type SelectNodeCB = (node: FileNode, parent?: FileNode) => void;
