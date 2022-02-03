@@ -15,7 +15,7 @@ const NodeLabel = (props: NodeLabelProps) => (
     >
       {prepareNodeLabel(props.node, props.parent)}
     </Box>
-    {!!props.node.size && <Box mr={1} component={Typography}>{props.node.size}</Box>}
+    {!!props.node.size && <Box mr={1} component={Typography}>{props.node.size} bytes</Box>}
   </Box>
 );
 
