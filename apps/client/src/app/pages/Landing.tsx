@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@apollo/client'
 import { FormikHelpers } from 'formik';
 import { defaultSearchFormValues, FileExplorer, FileNode, mapNodesToPath, SearchForm, SearchFormValues, SelectNodeCB } from '@directory-inspector/file-explorer'
@@ -40,7 +40,7 @@ const Landing = () => {
         updateNode(data?.files?.entries, data?.files?.totalCount);
       }
     }
-  })
+  });
 
   const refetchFiles = (variables: SearchFormValues) => {
     refetch(variables).then((data: any) => {
