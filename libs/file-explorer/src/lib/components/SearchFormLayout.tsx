@@ -57,7 +57,7 @@ export const SearchFormLayout: React.FunctionComponent<SearchFormLayoutProps> = 
               fullWidth
               disabled={isSubmitting}
               size="large"
-              onClick={onSubmit}
+              type="submit" 
             >
               Explore
             </Button>
