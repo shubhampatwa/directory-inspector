@@ -103,10 +103,12 @@ const Landing = () => {
     if (node.isDirectory) {
       setSearchFormValues({
         ...searchFormValues,
+        offset: 0,
         path: node.path,
       });
       refetchFiles({
         ...searchFormValues,
+        offset: 0,
         path: node.path,
       })
     }
