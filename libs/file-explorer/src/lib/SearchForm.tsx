@@ -46,10 +46,9 @@ export const SearchForm: React.FunctionComponent<SearchFormProps> = (props) => {
       }}
       onSubmit={props.onSubmit}
     >
-      {({ submitForm, isSubmitting, setValues }) => (
+      {({ isSubmitting, setValues }) => (
         <SearchFormLayout
           isSubmitting={isSubmitting}
-          onSubmit={submitForm}
           onReset={() => setValues(defaultSearchFormValues)}
         />
       )}

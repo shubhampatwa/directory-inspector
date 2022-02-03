@@ -7,13 +7,11 @@ import { TextField } from 'formik-mui';
 
 export interface SearchFormLayoutProps {
   isSubmitting: boolean;
-  onSubmit: (values: FormikValues) => void;
   onReset?: () => void;
 }
 
 export const SearchFormLayout: React.FunctionComponent<SearchFormLayoutProps> = ({
   isSubmitting,
-  onSubmit,
   onReset
 }) => (
   <Form>
