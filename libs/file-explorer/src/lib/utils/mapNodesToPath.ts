@@ -1,21 +1,36 @@
 import uniqBy from "lodash/uniqBy";
-import { sep } from "path-browserify";
 import { FileNode } from "../types";
 
-const mergeNodes = (currentNode: FileNode, newNodes: FileNode[]): FileNode => {
-  return {
+const mergeNodes = (currentNode: FileNode, newNodes: FileNode[], totalCount: number): FileNode => {
+  const updatedNode = {
     ...currentNode,
     nodes: uniqBy([
-      ...(currentNode.nodes || []).filter(({ fileName }) => fileName !== 'PLACEHOLDER'),
+      ...(currentNode.nodes || []).filter(({ fileName }) => !['PLACEHOLDER', 'LOAD_MORE_FILES'].includes(fileName)),
       ...newNodes
     ], 'path'),
   };
+
+  if (updatedNode.nodes.length < totalCount) {
+    updatedNode.nodes = [
+      ...updatedNode.nodes,
+      {
+        fileName: 'LOAD_MORE_FILES',
+        path: 'load more files..',
+        isDirectory: false,
+        size: 0,
+        parsedPath: [],
+      },
+    ];
+  }
+
+  return updatedNode;
 };
 
 const mapNode = (
   node: FileNode,
   newNodes: FileNode[],
-  parsedPath: string[]
+  parsedPath: string[],
+  totalCount: number,
 ): FileNode => {
   const [currentDir] = parsedPath.slice(0, 1);
   const restPath = parsedPath.slice(1);
@@ -28,11 +43,11 @@ const mapNode = (
       }
 
       if (restPath.length) {
-        return mapNode(childNode, newNodes, restPath);
+        return mapNode(childNode, newNodes, restPath, totalCount);
       }
 
       if (childNode.fileName === currentDir) {
-        return mergeNodes(childNode, newNodes)
+        return mergeNodes(childNode, newNodes, totalCount)
       }
 
       return childNode;
@@ -42,12 +57,11 @@ const mapNode = (
 
 export const mapNodesToPath = (
   node: FileNode,
-  root: string,
+  parsedPath: string[],
   newNodes: FileNode[],
-  currentPath: string
+  totalCount: number,
 ): FileNode => {
-  const parsedPath = currentPath.replace(root, '').split(sep).slice(1)
-  return mapNode(node, newNodes, parsedPath);
+  return mapNode(node, newNodes, parsedPath, totalCount);
 };
 
 export default mapNodesToPath;

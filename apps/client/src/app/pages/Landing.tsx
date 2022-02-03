@@ -30,13 +30,14 @@ const prepareNodesToDisplay = (nodes: FileNode[]): FileNode[] => (
 
 const Landing = () => {
   const [node, setNode] = useState<FileNode | undefined>(undefined);
-  const [basePath, setBasePath] = useState<string>('');
+  const [filesCount, setFilesCount] = useState<Record<string, number>>({});
+  const [rootPath, setRootPath] = useState<string>('');
   const [searchFormValues, setSearchFormValues] = useState<SearchFormValues>(defaultSearchFormValues);
   const {refetch } = useQuery(queryFiles, {
     variables: defaultSearchFormValues,
     onCompleted: (data: any) => {
       if (data?.files?.entries.length) {
-        updateNode(data?.files?.entries);
+        updateNode(data?.files?.entries, data?.files?.totalCount);
       }
     }
   })
@@ -44,17 +45,18 @@ const Landing = () => {
   const refetchFiles = (variables: SearchFormValues) => {
     refetch(variables).then((data: any) => {
       if (data?.files?.entries.length) {
-        updateNode(data?.files?.entries);
+        updateNode(data?.files?.entries, data?.files?.totalCount);
       }
     });
   }
 
-  const updateNode = (nodes: FileNode[]) => {
+  const updateNode = (nodes: FileNode[], totalCount = 0) => {
     const newNodes = prepareNodesToDisplay(nodes);
     const currentPath = searchFormValues.path;
 
     if (node) {
-      const updatedState = mapNodesToPath(node, basePath, newNodes, currentPath)
+      const parsedPath = currentPath.replace(rootPath, '').split(sep).slice(1)
+      const updatedState = mapNodesToPath(node, parsedPath, newNodes, totalCount)
       setNode(updatedState);
     } else {
       const newState = {
@@ -67,17 +69,37 @@ const Landing = () => {
       };
 
       setNode(newState);
-      setBasePath(currentPath);
+      setRootPath(currentPath);
+    }
+
+    if (!filesCount[currentPath]) {
+      setFilesCount({
+        ...filesCount,
+        [currentPath]: totalCount,
+      });
     }
   }
 
   const onSubmit = async (values: SearchFormValues, { setSubmitting }: FormikHelpers<SearchFormValues>) => {
+    if (values.path !== searchFormValues.path) {
+      setNode(undefined);
+    }
     setSearchFormValues(values);
-    setNode(undefined);
     refetchFiles(values)
   };
 
-  const onSelectNode: SelectNodeCB = (node) => {
+  const onSelectNode: SelectNodeCB = (node, parent) => {
+    if (node.fileName === 'LOAD_MORE_FILES') {
+      setSearchFormValues({
+        ...searchFormValues,
+        offset: parent?.nodes?.length ? parent?.nodes?.length - 1 : 0,
+      });
+      refetchFiles({
+        ...searchFormValues,
+        offset: parent?.nodes?.length ? parent?.nodes?.length - 1 : 0,
+      })
+    }
+
     if (node.isDirectory) {
       setSearchFormValues({
         ...searchFormValues,
