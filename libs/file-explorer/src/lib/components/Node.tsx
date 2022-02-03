@@ -1,7 +1,7 @@
 import React from 'react';
 import TreeItem from '@mui/lab/TreeItem';
 import NodeLabel from './NodeLabel';
-import { FileNode, NodeLabelProps, NodeProps } from '../types'
+import { FileNode, NodeProps } from '../types'
 
 const Node = ({ node, parent, onSelectNode }: NodeProps) => (
   <TreeItem
