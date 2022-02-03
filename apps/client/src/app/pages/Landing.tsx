@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client'
 import { FormikHelpers } from 'formik';
-import { defaultSearchFormValues, FileExplorer, FileNode, mapNodesToPath, SearchForm, SearchFormValues, SelectNodeCB } from '@directory-inspector/file-explorer'
+import { defaultSearchFormValues, FileExplorer, FileNode, mapNodesToPath, mergeNodes, SearchForm, SearchFormValues, SelectNodeCB } from '@directory-inspector/file-explorer'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -55,11 +55,11 @@ const Landing = () => {
     const currentPath = searchFormValues.path;
 
     if (node) {
-      const parsedPath = currentPath.replace(rootPath, '').split(sep).slice(1)
+      const parsedPath = currentPath.replace(rootPath, '').split(sep).filter(Boolean);
       const updatedState = mapNodesToPath(node, parsedPath, newNodes, totalCount)
       setNode(updatedState);
     } else {
-      const newState = {
+      const newNode = {
         path: currentPath,
         fileName: currentPath,
         size: 0,
@@ -68,7 +68,7 @@ const Landing = () => {
         parsedPath: currentPath.split(sep).slice(1),
       };
 
-      setNode(newState);
+      setNode(mergeNodes(newNode, [], totalCount));
       setRootPath(currentPath);
     }
 
@@ -93,10 +93,12 @@ const Landing = () => {
       setSearchFormValues({
         ...searchFormValues,
         offset: parent?.nodes?.length ? parent?.nodes?.length - 1 : 0,
+        path: parent?.path as string
       });
       refetchFiles({
         ...searchFormValues,
         offset: parent?.nodes?.length ? parent?.nodes?.length - 1 : 0,
+        path: parent?.path as string
       })
     }
 

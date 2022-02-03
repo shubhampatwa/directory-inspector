@@ -10,6 +10,10 @@ export const mapNodesToPath = (
   const [currentDir] = parsedPath.slice(0, 1);
   const restPath = parsedPath.slice(1);
 
+  if (!currentDir && !restPath.length) {
+    return mergeNodes(node, newNodes, totalCount);
+  }
+
   return {
     ...node,
     nodes: (node.nodes || []).map(childNode => {
